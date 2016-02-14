@@ -1,0 +1,961 @@
+\documentclass[8pt,a4paper,compress]{beamer}
+
+\usepackage{/home/siyer/lib/slides}
+
+\title{Collections and Functions}
+\date{}
+
+\begin{document}
+\begin{frame}
+\vfill
+\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Outline}
+\tableofcontents
+\end{frame}
+
+\section{Lists}
+\begin{frame}[fragile]
+A \emph{collection} (aka \emph{container} or \emph{data structure}) is a way to organize data that we wish to process with a computer program
+
+\bigskip
+
+A \emph{list} (aka \emph{one-dimensional array} or \emph{array}) is a collection that stores a sequence of (references to) objects
+
+\bigskip
+
+The simplest way to create a list (an object of the built-in sequence type \lstinline{list}) in Python is to place comma-separated values between matching square brackets
+
+\bigskip
+
+For example, the following code creates a list \lstinline{suits} with four strings, and creates lists \lstinline{x} and \lstinline{y}, each with three floats
+
+\begin{lstlisting}[language=Python]
+suits = ['Clubs', 'Diamonds', 'Hearts', 'Spades']
+x = [0.30, 0.60, 0.10]
+y = [0.40, 0.10, 0.50]
+\end{lstlisting}
+
+\bigskip
+
+After creating a list, we can refer to any individual object by specifying the list name followed by an integer index within square brackets
+
+\bigskip
+
+For example, if we have two lists of floats \lstinline{x} and \lstinline{y} whose length is given by a variable \lstinline{n}, we can calculate their dot product as follows
+
+\begin{lstlisting}[language=Python]
+total = 0.0
+for i in range(n):
+    total += x[i] * y[i]
+\end{lstlisting} 
+\end{frame}
+
+\begin{frame}[fragile]
+We refer to the first element of an $n$-element list \lstinline{a} as \lstinline{a[0]}, the second element as \lstinline{a[1]}, and so on; the last ($n$th) element is referred to as \lstinline{a[n - 1]}
+
+\bigskip
+
+We can access the length of a list \lstinline{a} using the built-in function \lstinline{len()}
+
+\bigskip
+
+We can use the \lstinline{+=} operator to append elements to a list; For example, the following code creates a list \lstinline{a} with $n$ floats, with each element initialized to \lstinline{0.0}
+
+\begin{lstlisting}[language=Python]
+a = []
+for i in range(n):
+    a += [0.0]
+\end{lstlisting} 
+\end{frame}
+
+\begin{frame}[fragile]
+Lists are \emph{mutable} objects because we can change their values; For example, the following code reverses the order of elements in a list \lstinline{a}
+
+\begin{lstlisting}[language=Python]
+n = len(a)
+for i in range(n / 2):
+    temp = a[i]
+    a[i] = a[n - 1 - i]
+    a[n - 1 - i] = temp
+\end{lstlisting}
+
+\bigskip
+
+One of the most basic operations on a list is to \emph{iterate} over all its elements; For example, the following code computes the average of a list of floats
+
+\begin{lstlisting}[language=Python]
+total = 0.0
+for i in range(len(a)):
+    total += a[i]
+average = total / len(a)
+\end{lstlisting}
+
+and the following code does the same without referring to the indices explicitly
+
+\begin{lstlisting}[language=Python]
+total = 0.0
+for v in a:
+    total += v
+average = total / len(a)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+Python has several built-in functions that take lists as arguments; For example, given a list \lstinline{a}
+\begin{itemize}
+\item \lstinline{len(a)} returns the number of elements in the list
+\item \lstinline{sum(a)} returns the sum of the elements in the list
+\item \lstinline{min(a)} returns the minimum element in the list
+\item \lstinline{max(a)} returns the maximum element in the list
+\item ...
+\end{itemize}
+
+\bigskip
+
+We can write a list by passing it as an argument to \lstinline{stdio.write()} or \lstinline{stdio.writeln()}, or we can use a \lstinline{for} statement to write each element individually
+
+\bigskip
+
+\emph{Aliasing} refers to the situation where two variables refer to the same object; For example, after the assignment statements
+\begin{lstlisting}[language=Python]
+x = [.30, .60, .10]
+y = x
+x[1] = .99
+\end{lstlisting}
+the value of \lstinline{y[1]} is also \lstinline{.99}
+\end{frame}
+
+\begin{frame}[fragile]
+One way to make a copy \lstinline{y} of a given list \lstinline{x} is to iterate though \lstinline{x} to build \lstinline{y}
+\begin{lstlisting}[language=Python]
+y = []
+for v in x:
+    y += [v]
+\end{lstlisting}
+
+\bigskip
+
+Alternatively, the expression \lstinline{a[i:j]}, called \emph{slicing},  evaluates to a new list whose elements are \lstinline{a[i], ..., a[j - 1]}; The default value for \lstinline{i} is \lstinline{0} and the default value for \lstinline{j} is \lstinline{len(a)}, so \lstinline{y = x[:]} is equivalent to the code above
+
+\bigskip
+
+The \lstinline{stdarray} module defines functions for processing lists
+
+\begin{center}
+\begin{tabular}{cc}
+function & description \\ \hline
+\lstinline$stdarray.create1D(n, val)$ & list of length $n$, each element initialized to $val$ \\
+\lstinline$stdarray.create2D(m, n, val)$ & $m$-by-$n$ list, each element initialized to $val$ \\
+$\dots$ & $\dots$
+\end{tabular} 
+\end{center}
+
+\bigskip
+
+The \lstinline{sys.argv} object that we have been using to read command-line arguments is a list of string objects
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{framed}
+\tiny Example: Code for representing and processing playing cards.
+\end{framed}
+
+Represent suits and ranks
+\begin{lstlisting}[language=Python]
+SUITS = ['Clubs', 'Diamonds', 'Hearts', 'Spades']
+RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 
+         'Jack', 'Queen', 'King', 'Ace']
+\end{lstlisting}
+
+Write a random card name
+\begin{lstlisting}[language=Python]
+rank = random.randrange(0, len(RANKS))
+suit = random.randrange(0, len(SUITS))
+stdio.writeln(RANKS[rank] + ' of ' + SUITS[suit])
+\end{lstlisting}
+
+Create a deck
+\begin{lstlisting}[language=Python]
+deck = []
+for rank in RANKS:
+    for suit in SUITS:
+        card = rank + ' of ' + suit
+        deck += [card]
+\end{lstlisting}
+
+Shuffle the deck
+\begin{lstlisting}[language=Python]
+n = len(deck)
+for i in range(n):
+    r = random.randrange(i, n)
+    temp = deck[r]
+    deck[r] = deck[i]
+    deck[i] = temp
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{framed}
+\tiny couponcollector.py: Accept integer $n$ as a command-line argument. Write to standard output the number of coupons you collect before obtaining one of each of $n$ types.
+\end{framed}
+
+\begin{lstlisting}[language=Python]
+import random
+import stdarray
+import stdio
+import sys
+
+n = int(sys.argv[1])
+count = 0
+collectedCount = 0
+isCollected = stdarray.create1D(n, False)
+while collectedCount < n:
+    value = random.randrange(0, n)
+    count += 1
+    if not isCollected[value]:
+        collectedCount += 1
+        isCollected[value] = True
+stdio.writeln(count)
+\end{lstlisting}
+
+\begin{lstlisting}[language={}]
+$ python couponcollector.py 1000000
+13988284
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+In many applications, a convenient way to store information is to use a table of numbers organized in a rectangular table and refer to \emph{rows} and \emph{columns} in the table
+
+\bigskip
+
+The simplest way to create a two-dimensional list in Python is to place comma-separated one-dimensional lists between matching square brackets 
+
+\bigskip
+
+For example, this matrix of integers having two rows and three columns 
+\[
+\begin{bmatrix}
+18 & 19 & 20 \\ 
+21 & 22 & 23
+\end{bmatrix}
+\]
+can be represented in Python using this list of lists
+\begin{lstlisting}[language=Python]
+a = [[18, 19, 20], [21, 22, 23]]
+\end{lstlisting}
+
+\bigskip
+
+Python represents an $m$-by-$n$ list as a list that contains $m$ objects, each of which is a list that contains $n$ objects
+
+\bigskip
+
+For example, the following code creates an $m$-by-$n$ list \lstinline{a} of floats, with all elements initialized to \lstinline{0.0}
+\begin{lstlisting}[language=Python]
+a = []
+for i in range(m):
+    row = [0.0] * n
+    a += [row]
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+When \lstinline{a} is a two-dimensional list, the syntax \lstinline{a[i]} refers to its \lstinline{i}th row, which is a one-dimensional list; The syntax \lstinline{a[i][j]} refers to the object at row \lstinline{i} and column \lstinline{j}
+
+\bigskip
+
+For example, the following code adds two $n$-by-$n$ matrices \lstinline{a} and \lstinline{b}
+
+\begin{lstlisting}[language=Python]
+c = stdarray.create2D(n, n, 0.0)
+for i in range(n):
+    for j in range(n):
+        c[i][j] = a[i][j] + b[i][j]
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{framed}
+\tiny selfavoid.py: Accept integers $n$ and $trials$ as command-line arguments. Do $trials$ random self-avoiding walks in an $n$-by-$n$ lattice. Write to standard output the percentage of dead ends encountered.
+\end{framed}
+
+\begin{lstlisting}[language=Python]
+import random
+import stdarray
+import stdio
+import sys
+
+n      = int(sys.argv[1])
+trials = int(sys.argv[2])
+deadEnds = 0
+for t in range(trials):
+    a = stdarray.create2D(n, n, False)
+    x = n / 2
+    y = n / 2
+    while (x > 0) and (x < n - 1) and (y > 0) and (y < n - 1):
+        a[x][y] = True
+        if a[x - 1][y] and a[x + 1][y] and a[x][y - 1] and a[x][y + 1]:
+            deadEnds += 1
+            break
+        r = random.randrange(1, 5)
+        if   (r == 1) and (not a[x + 1][y]):
+            x += 1
+        elif (r == 2) and (not a[x - 1][y]):
+            x -= 1
+        elif (r == 3) and (not a[x][y + 1]):
+            y += 1
+        elif (r == 4) and (not a[x][y - 1]):
+            y -= 1
+stdio.writeln(str(100 * deadEnds / trials) + '% dead ends')
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}[language={}]
+$ python selfavoid.py 5 100
+0% dead ends
+$ python selfavoid.py 20 100
+31% dead ends
+$ python selfavoid.py 40 100
+77% dead ends
+$ python selfavoid.py 80 100
+98% dead ends
+$ python selfavoid.py 5 1000
+0% dead ends
+$ python selfavoid.py 20 1000
+30% dead ends
+$ python selfavoid.py 40 1000
+75% dead ends
+$ python selfavoid.py 80 1000
+98% dead ends
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+A list with rows of nonuniform length is known as a \emph{ragged list}
+
+\bigskip
+
+For example, the following code writes the contents of a ragged list
+
+\begin{lstlisting}[language=Python]
+for i in range(len(a)):
+    for j in range(len(a[i])):
+        stdio.write(a[i][j])
+        stdio.write(' ')
+    stdio.writeln()
+\end{lstlisting}
+
+\bigskip
+
+The same notation extends to allow us to compose code using lists that have any number of dimensions; For example, using lists of lists of lists, we can create a three-dimensional list \lstinline{a}, and then refer to an individual element of \lstinline{a} as \lstinline{a[i][j][k]}
+\end{frame}
+
+\section{Tuples}
+\begin{frame}[fragile]
+A \emph{tuple} (an object of the built-in sequence type \lstinline{tuple}) consists of a number of values separated by commas
+\begin{lstlisting}[language={}]
+>>> t = 12345, 54321, 'hello!'
+>>> t[0]
+12345
+>>> t
+(12345, 54321, 'hello!')
+\end{lstlisting}
+
+\bigskip
+
+Tuples may be nested
+\begin{lstlisting}[language={}]
+>>> u = t, (1, 2, 3, 4, 5)
+>>> u
+((12345, 54321, 'hello!'), (1, 2, 3, 4, 5))
+\end{lstlisting}
+
+\bigskip
+
+Tuples are immutable, but they can contain mutable objects
+\begin{lstlisting}[language={}]
+>>> v = ([1, 2, 3], [3, 2, 1])
+>>> v
+([1, 2, 3], [3, 2, 1])
+\end{lstlisting}
+
+\bigskip
+
+Empty and singleton sequences
+\begin{lstlisting}[language={}]
+>>> empty = ()
+>>> singleton = 'hello', 
+>>> len(empty)
+0
+>>> len(singleton)
+1
+\end{lstlisting}
+
+\bigskip
+
+Sequence unpacking
+\begin{lstlisting}[language={}]
+>>> x, y, z = t
+\end{lstlisting}
+\end{frame}
+
+\section{Sets}
+\begin{frame}[fragile]
+A \emph{set} (an object of the built-in sequence type \lstinline{set}) is an unordered collection with no duplicate elements
+\begin{lstlisting}[language={}]
+>>> basket = ['apple', 'orange', 'apple', 'pear', 'orange', 'banana']
+>>> fruit = set(basket)
+>>> fruit
+set(['orange', 'pear', 'apple', 'banana'])
+\end{lstlisting}
+
+\bigskip
+
+Fast membership testing
+\begin{lstlisting}[language={}]
+>>> 'orange' in fruit
+True
+>>> 'crabgrass' in fruit
+False
+\end{lstlisting}
+
+\bigskip
+
+Set operations
+\begin{lstlisting}[language={}]
+>>> a = set('abracadabra')
+>>> b = set('alacazam')
+>>> a                                  # unique letters in a
+set(['a', 'r', 'b', 'c', 'd'])
+>>> a - b                              # letters in a but not in b
+set(['r', 'd', 'b'])
+>>> a | b                              # letters in either a or b
+set(['a', 'c', 'r', 'd', 'b', 'm', 'z', 'l'])
+>>> a & b                              # letters in both a and b
+set(['a', 'c'])
+>>> a ^ b                              # letters in a or b but not both
+set(['r', 'd', 'b', 'm', 'z', 'l'])
+\end{lstlisting}
+\end{frame}
+
+\section{Dictionaries}
+\begin{frame}[fragile]
+A \emph{dictionary} (an object of the built-in mapping type \lstinline{dict}) is an unordered set of \emph{key}-\emph{value} pairs, with the requirement that the keys are unique
+\begin{lstlisting}[language={}]
+>>> tel = {'jack': 4098, 'sape': 4139}
+>>> tel['guido'] = 4127
+>>> tel
+{'sape': 4139, 'guido': 4127, 'jack': 4098}
+>>> tel['jack']
+4098
+>>> tel['irv'] = 4127
+>>> tel
+{'guido': 4127, 'irv': 4127, 'jack': 4098, 'sape': 4139}
+>>> 'guido' in tel
+True
+\end{lstlisting}
+
+\bigskip
+
+Dictionaries can be built directly from sequences of key-value pairs
+\begin{lstlisting}[language={}]
+>>> dict([('sape', 4139), ('guido', 4127), ('jack', 4098)])
+{'sape': 4139, 'jack': 4098, 'guido': 4127}
+\end{lstlisting}
+
+\end{frame}
+
+\section{Comprehensions}
+\begin{frame}[fragile]
+\emph{Comprehensions} provide a concise way to create collections
+
+\bigskip
+
+List comprehensions
+\begin{lstlisting}[language={}]
+>>> squares = [x ** 2 for x in range(10)]
+>>> squares
+[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+>>> [(x, y) for x in [1, 2, 3] for y in [3, 1, 4] if x != y]
+[(1, 3), (1, 4), (2, 3), (2, 1), (2, 4), (3, 1), (3, 4)]
+\end{lstlisting}
+
+\bigskip
+
+Nested list comprehensions
+\begin{lstlisting}[language={}]
+>>> matrix = [
+...     [1, 2, 3, 4],
+...     [5, 6, 7, 8],
+...     [9, 10, 11, 12],
+... ]
+>>> [[row[i] for row in matrix] for i in range(4)]
+[[1, 5, 9], [2, 6, 10], [3, 7, 11], [4, 8, 12]]
+\end{lstlisting}
+
+\bigskip
+
+Set comprehensions
+\begin{lstlisting}[language={}]
+>>> a = {x for x in 'abracadabra' if x not in 'abc'}
+>>> a
+set(['r', 'd'])
+\end{lstlisting}
+
+\bigskip
+
+Dictionary comprehensions
+\begin{lstlisting}[language={}]
+>>> {x: x ** 2 for x in (2, 4, 6)}
+{2: 4, 4: 16, 6: 36}
+\end{lstlisting}
+\end{frame}
+
+\section{Looping Techniques}
+\begin{frame}[fragile]
+When looping through a sequence, the position index and corresponding value can be retrieved at the same time using the \lstinline{enumerate()} function
+\begin{lstlisting}[language={}]
+>>> for i, v in enumerate(['tic', 'tac', 'toe']):
+...     stdio.writeln(str(i) + ' ' + v)
+...
+0 tic
+1 tac
+2 toe
+\end{lstlisting}
+
+\bigskip
+
+To loop over two or more sequences at the same time, the entries can be paired with the \lstinline{zip()} function
+\begin{lstlisting}[language={}]
+>>> questions = ['name', 'quest', 'favorite color']
+>>> answers = ['lancelot', 'the holy grail', 'blue']
+>>> for q, a in zip(questions, answers):
+...     stdio.writeln('What is your ' + q + '? It is ' + a)
+...
+What is your name? It is lancelot.
+What is your quest? It is the holy grail.
+What is your favorite color? It is blue.
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+To loop over a sequence in reverse, first specify the sequence in a forward direction and then call the \lstinline{reversed()} function
+\begin{lstlisting}[language={}]
+>>> for i in reversed(range(1, 10, 2)):
+...     stdio.writeln(i)
+...
+9
+7
+5
+3
+1
+\end{lstlisting}
+
+\bigskip
+
+To loop over a sequence in sorted order, use the \lstinline{sorted()} function which returns a new sorted list while leaving the source unaltered
+\begin{lstlisting}[language={}]
+>>> basket = ['apple', 'orange', 'apple', 'pear', 'orange', 'banana']
+>>> for f in sorted(set(basket)):
+...     stdio.writeln(f)
+...
+apple
+banana
+orange
+pear
+\end{lstlisting}
+\end{frame}
+
+\section{Using and Defining Functions}
+\begin{frame}[fragile]
+Functions allow us to
+\begin{itemize}
+\item Transfer control back and forth between different pieces of code 
+\item Clearly separate tasks within a program
+\item Reuse code
+\end{itemize}
+
+\bigskip
+
+Function definition in Python
+\begin{lstlisting}[language=Python]
+def <name>(<parameter name>, <parameter name>, ...):
+    <statement>
+    <statement>
+    ...
+\end{lstlisting}
+
+\begin{itemize}
+\item The first line, known as the \emph{signature}, consists of the \lstinline{def} keyword, the function name, a sequence of zero or more parameter variables separated by commas and enclosed in parentheses, and a colon
+
+\item The indented statements following the signature constitute the \emph{function body}
+
+\item The function body can contain a \emph{return statement}, which transfers control to the point where the function was called and returns the result of the computation (aka \emph{the return value})
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+For example, the following function tests if the argument $N$ is prime
+
+\begin{lstlisting}[language=Python]
+def is_prime(N):
+    if N < 2: 
+        return False
+    i = 2
+    while i <= N / i:
+        if N % i == 0:
+            return False
+        i += 1
+    return True
+\end{lstlisting}
+
+\bigskip
+
+A \emph{function call} is its name followed by expressions that specify argument values in parentheses, separated by commas; For example, \lstinline{is_prime(31)}
+
+\bigskip
+
+When the function call is part of an expression, as in \lstinline{x = math.sqrt(3)}, the function computes a value that is used in place of the call in the expression
+
+\bigskip
+
+Otherwise, the function call is a statement that generally causes side effects, as in \lstinline{stdio.writeln('Hello, World')}
+
+\bigskip
+
+When a module is executed directly by the \lstinline{python} command (and not via an \lstinline{import} statement), the module's \lstinline{__name__} is set equal to \lstinline{'__main__'}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{framed}
+\tiny harmonicf.py:  Write to standard output the harmonic numbers specified as command-line arguments.
+\end{framed}
+
+\begin{lstlisting}[language=Python]
+import stdio
+import sys
+
+def harmonic(n):
+    total = 0.0
+    for i in range(1, n + 1):
+        total += 1.0 / float(i)
+    return total
+
+def main():
+    for j in range(1, len(sys.argv)):
+        arg = int(sys.argv[j])
+        value = harmonic(arg)
+        stdio.writeln(value)
+
+if __name__ == '__main__':
+    main()
+\end{lstlisting}
+
+\begin{lstlisting}[language={}]
+$ python harmonicf.py 1 2 4
+1.0
+1.5
+2.08333333333
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+A Python function can have more than one parameter variable, so it can be called with more than one argument
+\begin{lstlisting}[language=Python]
+def hypot(a, b):
+    return math.sqrt(a * a + b * b)
+\end{lstlisting}
+
+\bigskip
+
+We can define as many functions as we want in a \lstinline{.py} file
+\begin{lstlisting}[language=Python]
+def square(x):
+    return x * x
+
+def hypot(a, b):
+    return math.sqrt(square(a) + square(b))
+\end{lstlisting}
+
+\bigskip
+
+We can put \lstinline{return} statements in a function wherever we need them, as in the \lstinline{is_prime()} function
+
+\bigskip
+
+A function provides only one return value to the caller; More precisely, it returns a reference to one object
+
+\bigskip
+
+The scope of a function's local and parameter variables is limited to that function
+
+\bigskip
+
+The scope of a variable defined in global code --- known as a \emph{global variable} --- is limited to the \lstinline{.py} file containing that variable
+\end{frame}
+
+\begin{frame}[fragile]
+A function may designate an argument to be \emph{optional} by specifying a \emph{default value} for that argument
+
+\bigskip
+
+For example, the following function computes the \emph{$n$th generalized harmonic number of order $r$}, $H_{n,r}=1+1/2^r+1/3^r+\cdots+1/n^r$
+
+\begin{lstlisting}[language=Python]
+def harmonic(n, r = 1):
+    total = 0.0
+    for i in range(1, n + 1):
+        total += 1.0 / (i ** r)
+    return total
+\end{lstlisting}
+With this definition, \lstinline{harmonic(2, 2)} returns \lstinline{1.25}, while both \lstinline{harmonic(2, 1)} and \lstinline{harmonic(2)} return \lstinline{1.5}
+
+\bigskip
+
+\emph{Named arguments} allow us to specify arguments to a function in any order; For example, the call \lstinline{harmonic(r = 2, n = 3)} is the same as the call \lstinline{harmonic(3, 2)}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{framed}
+\tiny coupon.py: Accept integer $n$ as a command-line argument. Write to standard output the number of coupons collected before obtaining one of each of $n$ types.
+\end{framed}
+
+\begin{lstlisting}[language=Python]
+import random
+import stdarray
+import stdio
+import sys
+
+def getCoupon(n):
+    return random.randrange(0, n)
+
+def collect(n):
+    found = stdarray.create1D(n, False)
+    couponCount = 0
+    distinctCouponCount = 0
+    while distinctCouponCount < n:
+        coupon = getCoupon(n)
+        couponCount += 1
+        if not found[coupon]:
+            distinctCouponCount += 1
+            found[coupon] = True
+    return couponCount
+
+def main():
+    n = int(sys.argv[1])
+    couponCount = collect(n)
+    stdio.writeln(couponCount)
+
+if __name__ == '__main__':
+    main()
+\end{lstlisting}
+
+\begin{lstlisting}[language={}]
+$ python coupon.py 1000000
+15490879
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+We can use parameter variables anywhere in the body of the function in the same way as we use local variables
+
+\bigskip
+
+Python initializes the parameter variable with the corresponding argument provided by the calling code --- an approach known as \emph{call by object reference} (aka \emph{call by value})
+
+\bigskip
+
+As a consequence, if a parameter variable refers to a mutable object and we change that object's value within a function, then this also changes the object's value in the calling code
+
+\bigskip
+
+When a function takes a list as an argument, it implements a function that operates on an arbitrary number of objects
+\begin{lstlisting}[language=Python]
+def mean(a):
+    total = 0.0
+    for v in a:
+        total += v
+    return total / len(a)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+Since lists are \emph{mutable}, it is often the case that the purpose of a function that takes a list as argument is to produce a side effect
+\begin{lstlisting}[language=Python]
+def exchange(a, i, j):
+    temp = a[i]
+    a[i] = a[j]
+    a[j] = temp
+\end{lstlisting}
+
+\bigskip
+
+There are situations where it is useful for a function to return a list
+\begin{lstlisting}[language=Python]
+def randomarray(n):
+    a = stdarray.create1D(n)
+    for i in range(n):
+        a[i] = random.random()
+    return a
+\end{lstlisting}
+\end{frame}
+
+\section{Filter, Lambda, Map, and Reduce Functions}
+\begin{frame}[fragile]
+In Python, functions are \emph{first-class citizens}, meaning they are actually data just like numbers, lists, and strings
+
+\bigskip
+
+As a result, we can write functions that take \emph{other functions} as arguments and return \emph{other functions} as results
+
+\bigskip
+
+The built-in function \lstinline{filter(f, seq)} returns those items of the sequence \lstinline{seq} for which \lstinline{f(item)} is \lstinline{True}
+\begin{lstlisting}[language={}]
+>>> primes = filter(is_prime, range(11))
+>>> primes
+[2, 3, 5, 7]
+\end{lstlisting}
+
+\bigskip
+
+A \emph{lambda function} is a ``disposable'' function that we can define just when we need it and then immediately throw it away after we are done using it
+\begin{lstlisting}[language={}]
+>>> odds = filter(lambda x : x % 2 != 0, range(11))
+>>> odds
+[1, 3, 5, 7, 9]
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+The built-in function \lstinline{map(f, seq)} returns a list of the results of applying the function \lstinline{f} to the items of the sequence \lstinline{seq}
+\begin{lstlisting}[language={}]
+squares = map(lambda x : x ** 2, range(11))
+>>> squares
+[0, 1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+\end{lstlisting}
+
+\bigskip
+
+The built-in function \lstinline{reduce(f, seq)} applies a function \lstinline{f} of two arguments cumulatively to the items of a sequence \lstinline{seq}, from left to right, so as to reduce the sequence to a single value
+\begin{lstlisting}[language={}]
+>>> total = reduce(lambda x, y: x + y, range(11))
+>>> total
+55
+\end{lstlisting}
+\end{frame}
+
+\section{Exercises}
+\begin{frame}[fragile]
+\begin{enumerate}
+\item Write a program \lstinline{stats.py} that writes the mean $\mu$, variance $Var$, and standard deviation $\sigma$ of the floats $x_1, 
+x_2, \dots, x_n$ supplied as command-line arguments, computed using the formulae:
+
+\[
+\mu = \frac{1}{n}\sum\limits_i^n x_i, 
+Var = \frac{1}{n}\sum\limits_i^n (x_i - \mu_i)^2, \text{ and }
+\sigma = \sqrt{Var}.
+\]
+
+\begin{lstlisting}[language={}]
+$ python stats.py 77 41 3 76 19 48 92 10 26 63
+45.5
+856.65
+29.26858384
+\end{lstlisting}
+
+\item Suppose that people enter an empty room until a pair of people share a birthday. On average, how many people will have to enter 
+before there is a match? Write a program \lstinline{birthday.py} that takes an integer $trials$ from the command line and runs $trials$ experiments to estimate this qua
+ntity, where each experiment involves sampling individuals until a pair of them share a birthday. Assume birthdays to be uniform random integers from the interval $[0, 
+365)$. 
+
+\begin{lstlisting}[language={}]
+$ python birthday.py 1000
+24
+\end{lstlisting}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{enumerate}\setcounter{enumi}{2}
+\item Pascal's triangle $\mathcal{P}_n$ is a triangular array with $n+1$ rows, each listing the coefficients of the binomial expansio
+n $(x+y)^i$, where $0 \leq i \leq n$. For example, $\mathcal{P}_4$ is the triangular array:
+\[
+\begin{matrix}
+1 & & & \\
+1 & 1 & & \\
+1 & 2 & 1 & \\
+1 & 3 & 3 & 1 \\
+1 & 4 & 6 & 4 & 1
+\end{matrix}
+\]
+The term $\mathcal{P}_n(i, j)$ is calculated as $\mathcal{P}_n(i-1, j-1)+\mathcal{P}_n(i-1, j),$ where $0 \leq i \leq n$ and $1 \leq j < i$, with $\mathcal{P}_n(i, 0) =
+ \mathcal{P}_n(i, i) = 1$ for all $i$. Write a program \lstinline{pascal.py} that takes an integer $n$ as command-line argument and writes $\mathcal{P}_n$.
+
+\begin{lstlisting}[language={}]
+$ python pascal.py 10
+1
+1 1
+1 2 1
+1 3 3 1
+1 4 6 4 1
+1 5 10 10 5 1
+1 6 15 20 15 6 1
+1 7 21 35 35 21 7 1
+1 8 28 56 70 56 28 8 1
+1 9 36 84 126 126 84 36 9 1
+1 10 45 120 210 252 210 120 45 10 1
+\end{lstlisting}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{enumerate}\setcounter{enumi}{3}
+\item Implement the function \lstinline{distance()} in \lstinline{distance.py} that returns the Euclidean distance between the vecto
+rs $x$ and $y$ represented as one-dimensional lists of floats. The Euclidean distance is calculated as the square root of the sums of the squares of the differences bet
+ween the corresponding entries. You may assume that $x$ and $y$ have the same length.
+
+\begin{lstlisting}[language={}]
+$ python distance.py 5
+-9 1 10 -1 1
+-5 9 6 7 4
+<ctrl-d>
+13.0
+\end{lstlisting}
+
+\item Implement the function \lstinline{is_palindrome()} in \lstinline{palindrome.py} that returns \lstinline{True} if the argument $s$ is a
+ palindrome (ie, reads the same forwards and backwards), and \lstinline{False} otherwise. You may assume that $s$ is all lower case and doesn't any whitespace character
+s.
+
+\begin{lstlisting}[language={}]
+$ python palindrome.py bolton
+False
+$ python palindrome.py amanaplanacanalpanama
+True
+\end{lstlisting}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{enumerate}\setcounter{enumi}{5}
+\item Implement the function \lstinline{transpose()} in \lstinline{transpose.py} that creates and returns a new matrix that is the transpose 
+of the matrix represented by the argument $a$. Note that $a$ need not have the same number rows and columns. Recall that the transpose of an $m$-by-$n$ matrix $A$ is an
+ $n$-by-$m$ matrix $B$ such that $B_{ij}=A_{ji}$, where $1 \leq i \leq n$ and $1 \leq j \leq m$.
+
+\begin{lstlisting}[language={}]
+$ python transpose.py 
+2 3 
+1 2 3
+4 5 6
+1.0 4.0
+2.0 5.0
+3.0 6.0
+\end{lstlisting}
+\end{enumerate}
+\end{frame}
+\end{document}
